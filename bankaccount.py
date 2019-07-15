@@ -13,10 +13,11 @@ class BankAccount:
     def withdraw(self, number):
         self.balance -= number
     
-    def gain_interest(self, gain_int):
-        self.balance *= gain_int
+    def gain_interest(self):
+        x = self.interest_rate / 100 + 1
+        self.balance *= x
 
-td = BankAccount(1000, 10)
+td = BankAccount(1000, 20)
 print(td.balance)
 print(td.interest_rate)
 print(td)
@@ -24,5 +25,5 @@ td.deposit(200)
 print(td)
 td.withdraw(200)
 print(td)
-td.gain_interest(1.1)
+td.gain_interest()
 print(td)
