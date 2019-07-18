@@ -1,44 +1,39 @@
-class PaperBoy:
+class Paperboy:
 
     def __init__(self, name):
         self.name = name
         self.experience = 0
         self.earnings = 0
+        self.base_quota = 50
 
     def __str__(self):
         return "PAPERBOY: name: {} - experience: {} - earnings {}.".format(self.name, self.experience, self.earnings)
 
     def quota(self):
-        base_quota = 50
-        return (self.experience / 2 + base_quota)
+        return self.base_quota
     
     def deliver(self, start_address, end_address):
-        regular_rate = 0.25
-        special_rate = 0.50
-        delivery_earning = 0 
-        self.experience = end_address - start_address
-        if self.experience < self.quota():
-            delivery_earning = self.experience * regular_rate - 2.00
-            return delivery_earning
-        elif self.experience > self.quota():
-            delivery_earning = (self.experience - self.quota() * special_rate) + self.quota() * regular_rate
-            return delivery_earning
+        deliveries = abs(end_address - start_address) + 1
+        self.experience += deliveries
+        if deliveries > self.base_quota:
+            self.earnings += self.base_quota * 0.25
+            self.earnings += (deliveries - self.base_quota) * 0.5
+        else:
+            self.earnings += deliveries * 0.25
+            self.earnings -= 2
+        self.base_quota += round(self.experience/2)
+        return self.earnings
 
-#add variable for earning specific delivery only
-#update overall self.earnings value
-#add variable for experience specific delivery and update overall self.experience value
+    def report(self):
+        return "Hello! I'm {}, I've delivered {} papers and I've earned ${} so far!".format(self.name, self.experience, self.earnings)
 
-#-------
-#variable for regular rate vs special rate
-#if total deliveries that day < quota = regular rate
-#elif total deliveries > quota = total deliveries - quota = * special rate + base quota * regular rate
+tommy = Paperboy("Tommy")
+print(tommy.quota()) #  50
+print(tommy.deliver(101, 160)) # 17.5
+print(tommy.earnings) # 17.5
+print(tommy.report()) # "I'm Tommy, I've delivered 60 papers and I've earned $17.5 so far!"
 
-    # def report(self):
-    #     return "Hello! I'm {}, I've delivered {} papers and I've earned ${:2f} so far!".format(self.name, self.experience, self.earnings)
-
-bob = PaperBoy('bob')
-print(bob)
-# print(bob.deliver(101, 160))
-print(bob.deliver(1, 75))
-print(bob.deliver(100, 150))
-print(bob)
+print(tommy.quota()) # 80
+print(tommy.deliver(1, 75)) # 16.75
+print(tommy.earnings) # 34.25
+print(tommy.report()) # "I'm Tommy, I've been delivered 135 papers and I've earned $34.25 so far!"
